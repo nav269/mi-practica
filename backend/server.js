@@ -1,4 +1,14 @@
 const http = require("http"); //importa el modulo HTTP nativo de nodejs
+const { Pool } = require('pg'); 
+
+// configuracion para la conexion a PosgreSQL
+const pool = new Pool({
+  user: 'postgres',
+  host: 'localhost', 
+  database: 'contacto',
+  password: '123456',
+  port: 5432,
+});
 
 const server = http.createServer((req, res) => {
     //Obtiene el método (GET, POST, etc.) y la URL solicitada
@@ -38,15 +48,21 @@ const server = http.createServer((req, res) => {
     // POST : resgistro
     } else if(req.method === 'POST' && req.url === "/registro") {
         let body = "";
+
         // Escucha datos del cuerpo (body)
         req.on('data', chunk => {
             body = chunk.toString();
-        })
+        });
         
         //cuando termina de recibir datos
-        req.on('end', () => {
+        req.on('end', async() => {
+            const data = JSON.parse(body); // Intenta parsear JSON
+            const { nombre, email, mensaje } = data;
             try {
-                const data = JSON.parse(body); // Intenta parsear JSON
+                await pool.query(
+                    'INSERT INTO mensajes (nombre, email, mensaje) VALUES ($1, $2, $3)',
+                    [nombre, email, mensaje]
+                );
                 console.log("Datos recibidos [post] ", data);
                 res.writeHead(201, {
                     'Content-Type': 'application/json',
@@ -54,7 +70,7 @@ const server = http.createServer((req, res) => {
                 });
                 res.end(JSON.stringify({mensaje: "Se creo correctamente"}))
             } catch (error) {
-                console.error("JSON inválido:", err);
+                console.error("JSON inválido:", error);
                 res.writeHead(400, {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*',
@@ -80,7 +96,7 @@ const server = http.createServer((req, res) => {
                 });
                 res.end(JSON.stringify({mensaje: "Se actualizo correctamente la data"}))
             } catch (error) {
-                console.error("JSON inválido:", err);
+                console.error("JSON inválido:", error);
                 res.writeHead(400, {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*',
@@ -117,7 +133,7 @@ const server = http.createServer((req, res) => {
                 });
                 res.end(JSON.stringify({mensaje: "Se actualizo el dato correctamente"}))
             } catch (error) {
-                console.error("JSON inválido:", err);
+                console.error("JSON inválido:", error);
                 res.writeHead(400, {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*',
