@@ -1,0 +1,42 @@
+body {
+    background: #f0f2f5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Contenedor general de la estructura con grid */
+.form-wrapper {
+    max-width: 900px;
+    width: 100%;
+}
+
+/*Columna del formulario*/
+.form-container {
+    background: #ffffffd9;
+    padding: 3rem;
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    position: relative;
+    height: 100%;
+}
+
+h2 {
+  color: #1b2a41; 
+}
+
+#respuesta {
+    margin-top: 1rem;
+}
+
+.img-fluid {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
